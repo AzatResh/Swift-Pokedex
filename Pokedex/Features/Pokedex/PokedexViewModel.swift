@@ -29,9 +29,7 @@ final class PokedexViewModel {
         }
             
         do {
-            print("Pokédex: начинаю запрос")
             let pokemon = try await repository.fetchPokemons()
-            print("Pokédex: получено \(pokemon.count) покемонов")
 
             try Task.checkCancellation()
             state = .loaded(pokemon)

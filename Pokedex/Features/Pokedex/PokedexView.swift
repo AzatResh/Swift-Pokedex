@@ -1,26 +1,44 @@
 import SwiftUI
 
 struct PokedexView: View {
-    let viewModel: PokedexViewModel
+    @State private var viewModel: PokedexViewModel
 
+   init(viewModel: PokedexViewModel) {
+       _viewModel = State(initialValue: viewModel)
+   }
+
+    @Environment(\.viewModels) private var viewModels
+    @State private var coordinator = PokedexCoordinator()
     @State private var loadAttempt = 0
 
     var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Pokédex")
-                .task(id: loadAttempt) {
-                    await viewModel.load()
+        NavigationStack(path: $coordinator.path) {
+            VStack {
+                content
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .navigationTitle("Pokédex")
+            .navigationDestination(for: PokedexRoute.self) { route in
+                switch route {
+                case .pokemonDetail(let pokemonId):
+                        PokemonDetailView(
+                            pokemonId: pokemonId,
+                            viewModel: viewModels.pokemonDetail()
+                        )
                 }
+            }
+        }
+        .task(id: loadAttempt) {
+            await viewModel.load()
         }
     }
 
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
-            
         case .idle:
-            Text("Idle")
+            Button("Загрузить покемонов", action: retry)
+
         case .loading:
             ProgressView("Загружаем покемонов…")
 
@@ -28,54 +46,43 @@ struct PokedexView: View {
             if pokemon.isEmpty {
                 ContentUnavailableView(
                     "Каталог пуст",
-                    systemImage: "list.bullet"
+                    systemImage: "square.grid.2x2"
                 )
             } else {
-                PokedexGridView(pokemon: pokemon)
-//                List(pokemon) { entry in
-//                    NavigationLink {
-//                        PokemonDetailView(pokemon: entry)
-//                    } label: {
-//                        HStack {
-//                            Text("#\(entry.id)")
-//                                .foregroundStyle(.secondary)
-//
-//                            Text(entry.name)
-//                        }
-//                    }
-//                }
+                PokedexGridView(pokemon: pokemon) { selectedPokemon in
+                    coordinator.showPokemonDetail(id: selectedPokemon.id)
+                }
             }
 
         case .failed:
             VStack(spacing: 12) {
                 Text("Не удалось загрузить каталог")
-
-                Button("Повторить") {
-                    loadAttempt += 1
-                }
+                Button("Повторить", action: retry)
             }
             .padding()
         }
     }
-}
 
+    private func retry() {
+        loadAttempt += 1
+    }
+}
 
 struct PokedexGridView: View {
     let pokemon: [Pokemon]
+    let onSelect: (Pokemon) -> Void
 
-    private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12),
-        
-    ]
+    private let columns = Array(
+        repeating: GridItem(.flexible(), spacing: 12),
+        count: 3
+    )
 
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(pokemon) { entry in
-                    NavigationLink {
-                        PokemonDetailView(pokemon: entry)
+                    Button {
+                        onSelect(entry)
                     } label: {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("#\(entry.id)")

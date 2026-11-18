@@ -1,17 +1,48 @@
 import SwiftUI
 
 struct PokemonDetailView: View {
-  let pokemon: Pokemon
-
-  var body: some View {
-    VStack(spacing: 10) {
-      Text(
-        "#\(pokemon.id)."
-      ).foregroundStyle(.secondary)
-
-      Text(pokemon.name)
+    let pokemonId: Int
+    @State private var viewModel: PokemonDetailViewModel
+    
+    init(pokemonId: Int, viewModel: PokemonDetailViewModel) {
+        self.pokemonId = pokemonId
+        self.viewModel = viewModel
     }
-    .navigationTitle("Детали")
-    .navigationBarTitleDisplayMode(.inline)
-  }
+
+    var body: some View {
+        content
+            .navigationBarTitleDisplayMode(.inline)
+            .task {
+                await viewModel.load(id: pokemonId)
+            }
+    }
+          
+    @ViewBuilder
+    private var content: some View {
+        switch viewModel.state {
+            case .idle:
+                Text("Idle")
+            case .loading:
+                ProgressView("Загрузка…")
+                
+            case .loaded(let pokemon):
+                VStack {
+                    Text(pokemon.name)
+                    
+                    HStack {
+                        
+                        Text("Height: \(pokemon.height)")
+                        Text("Weight: \(pokemon.weight)")
+                    }
+                    
+                }
+            
+            case .failed:
+                VStack(spacing: 12) {
+                    Text("Не удалось загрузить каталог")
+                }
+            }
+            
+    }
 }
+

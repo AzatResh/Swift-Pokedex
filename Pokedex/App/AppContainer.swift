@@ -1,21 +1,24 @@
-@MainActor
-final class AppContainer {
-    let dependencies: AppDependencies
+final class AppContainer: Sendable {
+//    let dependencies: AppDependencies
+    
+    let network: any NetworkService
+    let pokedexRepository: any PokedexRepositoryProtocol
 
     convenience init() {
         self.init(network: URLSessionNetworkService())
     }
 
     init(network: any NetworkService) {
-        self.dependencies = AppDependencies(network: network)
+        self.network = network
+        self.pokedexRepository = PokedexRepository(network: network)
     }
-
-    func makePokedexViewModel() -> PokedexViewModel {
-        let repository = PokedexRepository(network: dependencies.network)
-        return PokedexViewModel(repository: repository)
-    }
+    
+    
+    static let live = AppContainer()
 }
-
-struct AppDependencies {
-    let network: any NetworkService
-}
+//
+//struct AppDependencies {
+//    let network: any NetworkService
+//    
+//    let pokedexRepository: any PokedexRepositoryProtocol
+//}

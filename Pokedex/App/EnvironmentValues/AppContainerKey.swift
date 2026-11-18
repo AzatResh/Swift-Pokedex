@@ -15,8 +15,8 @@ extension EnvironmentValues {
     var viewModels: ViewModelFactory { ViewModelFactory(container: container) }
 
     /// Sprite downloads, for leaf views that need only this service.
-    var spriteLoader: any SpriteLoading { container.spriteLoader }
+//    var spriteLoader: any SpriteLoading { container.spriteLoader }
 
     /// Dominant sprite colors, for leaf views that need only this service.
-    var imageColorAnalyzer: any ImageColorAnalyzing { container.imageColorAnalyzer }
+//    var imageColorAnalyzer: any ImageColorAnalyzing { container.imageColorAnalyzer }
 }
