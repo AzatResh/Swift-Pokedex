@@ -9,12 +9,22 @@ import Foundation
 
 nonisolated struct PaginatedResponseDTO: Decodable, Sendable {
     let results: [ItemDTO]
+    
+    let next: URL?
 }
 
 struct PokemonDetailDTO: Decodable, Sendable {
+    
+    struct Sprites: Decodable {
+        let frontDefault: String
+        let backDefault: String
+    }
+    
     let id: Int
     let name: String
     let baseExperience: Int?
     let weight: Int
     let height: Int
+    
+    let sprites: Sprites
 }

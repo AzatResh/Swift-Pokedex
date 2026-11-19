@@ -26,16 +26,17 @@ struct PokemonDetailView: View {
                 ProgressView("Загрузка…")
                 
             case .loaded(let pokemon):
-                VStack {
-                    Text(pokemon.name)
+                VStack() {
                     
-                    HStack {
-                        
+                    SpriteImage(url: URL(string: pokemon.sprite.front))
+                    Text(pokemon.name)
+                    HStack() {
                         Text("Height: \(pokemon.height)")
                         Text("Weight: \(pokemon.weight)")
                     }
                     
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
             case .failed:
                 VStack(spacing: 12) {

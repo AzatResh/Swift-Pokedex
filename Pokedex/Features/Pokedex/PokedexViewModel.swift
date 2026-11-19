@@ -15,6 +15,13 @@ final class PokedexViewModel {
     private let repository: any PokedexRepositoryProtocol
     
     
+    private(set) var isLoadingNextPage = false
+    private(set) var hasNextPage = true
+    private(set) var nextPageFailed = false
+
+    private let pageSize = 20
+    private var offset = 0
+    
     init(repository: any PokedexRepositoryProtocol) {
         self.repository = repository
     }
@@ -29,10 +36,18 @@ final class PokedexViewModel {
         }
             
         do {
-            let pokemon = try await repository.fetchPokemons()
+            let result = try await repository.fetchPokemons(
+                limit: pageSize,
+                offset: 0
+            )
 
             try Task.checkCancellation()
-            state = .loaded(pokemon)
+            
+            
+            offset = result.items.count
+            hasNextPage = result.hasNextPage && !result.items.isEmpty
+            nextPageFailed = false
+            state = .loaded(result.items)
         } catch {
             if Task.isCancelled || error is CancellationError {
                 state = .idle
@@ -41,5 +56,42 @@ final class PokedexViewModel {
             }
         }
     }
+    
+    func loadNextPage() async {
+            guard case .loaded(let currentPokemon) = state,
+                  hasNextPage,
+                  !isLoadingNextPage,
+                  !nextPageFailed else {
+                return
+            }
+
+            isLoadingNextPage = true
+            defer { isLoadingNextPage = false }
+
+            do {
+                let page = try await repository.fetchPokemons(
+                    limit: pageSize,
+                    offset: offset
+                )
+
+                try Task.checkCancellation()
+
+                // Исключаем повторяющиеся ID, если страницы пересекаются.
+                var existingIDs = Set(currentPokemon.map(\.id))
+                let newPokemon = page.items.filter {
+                    existingIDs.insert($0.id).inserted
+                }
+
+                offset += page.items.count
+                hasNextPage = page.hasNextPage && !page.items.isEmpty
+                state = .loaded(currentPokemon + newPokemon)
+            } catch {
+                if Task.isCancelled || error is CancellationError {
+                    return
+                }
+
+                nextPageFailed = true
+            }
+        }
 
 }

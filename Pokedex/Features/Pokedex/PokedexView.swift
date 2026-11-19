@@ -49,9 +49,12 @@ struct PokedexView: View {
                     systemImage: "square.grid.2x2"
                 )
             } else {
-                PokedexGridView(pokemon: pokemon) { selectedPokemon in
-                    coordinator.showPokemonDetail(id: selectedPokemon.id)
-                }
+                PokedexGridView(
+                    viewModel: viewModel,
+                    onSelect: { pokemon in
+                        coordinator.showPokemonDetail(id: pokemon.id)
+                    }
+                )
             }
 
         case .failed:
@@ -65,46 +68,5 @@ struct PokedexView: View {
 
     private func retry() {
         loadAttempt += 1
-    }
-}
-
-struct PokedexGridView: View {
-    let pokemon: [Pokemon]
-    let onSelect: (Pokemon) -> Void
-
-    private let columns = Array(
-        repeating: GridItem(.flexible(), spacing: 12),
-        count: 3
-    )
-
-    var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(pokemon) { entry in
-                    Button {
-                        onSelect(entry)
-                    } label: {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("#\(entry.id)")
-                                .font(.caption.monospacedDigit())
-                                .foregroundStyle(.secondary)
-
-                            Text(entry.name)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(16)
-                        .background(
-                            Color.secondary.opacity(0.12),
-                            in: RoundedRectangle(cornerRadius: 14)
-                        )
-                        .contentShape(RoundedRectangle(cornerRadius: 14))
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(16)
-        }
     }
 }

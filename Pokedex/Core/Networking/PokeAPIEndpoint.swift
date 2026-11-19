@@ -1,7 +1,7 @@
 import Foundation
 
 enum PokeAPIEndpoint: APIEndpoint {
-    case pokemonList(limit: Int)
+    case pokemonList(limit: Int, offset: Int)
     case pokemonDetails(id: Int)
 
     var baseURL: String { "https://pokeapi.co/api/v2/" }
@@ -25,8 +25,11 @@ enum PokeAPIEndpoint: APIEndpoint {
 
     var queryItems: [URLQueryItem] {
         switch self {
-        case .pokemonList(let limit):
-            return [URLQueryItem(name: "limit", value: String(limit))]
+        case .pokemonList(let limit, let offset):
+            return [
+                URLQueryItem(name: "limit", value: String(limit)),
+                URLQueryItem(name: "offset", value: String(offset)),
+        ]
         case .pokemonDetails:
             return []
         }

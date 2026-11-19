@@ -20,7 +20,7 @@ struct PokedexApp: App {
 }
 
 private struct RootView: View {
-    @Environment(\.container) private var container
+//    @Environment(\.container) private var container
     @Environment(\.viewModels) private var viewModels
 
     var body: some View {
