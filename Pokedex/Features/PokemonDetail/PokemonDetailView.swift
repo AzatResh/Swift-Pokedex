@@ -28,7 +28,10 @@ struct PokemonDetailView: View {
             case .loaded(let pokemon):
                 VStack() {
                     
-                    SpriteImage(url: URL(string: pokemon.sprite.front))
+                    SpriteImage(
+                        url: URL(string: pokemon.sprite.front),
+                        minHeight: 120
+                    )
                     Text(pokemon.name)
                     HStack() {
                         Text("Height: \(pokemon.height)")

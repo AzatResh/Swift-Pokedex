@@ -31,6 +31,9 @@ final class PokemonDetailViewModel {
         
         do {
             let detail = try await repository.fetchPokemon(id: id)
+            
+            
+            print("there ------- \(detail.name)")
             try Task.checkCancellation()
             state = .loaded(detail)
         

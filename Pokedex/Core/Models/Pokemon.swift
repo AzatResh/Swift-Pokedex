@@ -1,11 +1,11 @@
 import SwiftData
 
-@Model
-final class PokemonResponse: Identifiable {
-    let items: [Pokemon]
+
+struct PaginatedResponse<T> {
+    let items: [T]
     let hasNextPage: Bool
     
-    init(items: [Pokemon], hasNextPage: Bool) {
+    init(items: [T], hasNextPage: Bool) {
         self.items = items
         self.hasNextPage = hasNextPage
     }
@@ -32,13 +32,34 @@ final class PokemonDetail: Identifiable {
     
     var sprite: Sprite
     
-    init(dto: PokemonDetailDTO) {
-        self.id = dto.id
-        self.name = dto.name
-        self.baseExperience = dto.baseExperience
-        self.weight = dto.weight
-        self.height = dto.height
-        self.sprite = Sprite(front: dto.sprites.frontDefault, back: dto.sprites.backDefault)
+    init(
+        id: Int,
+        name: String,
+        baseExperience: Int?,
+        weight: Int,
+        height: Int,
+        sprite: Sprite
+    ) {
+        self.id = id
+        self.name = name
+        self.baseExperience = baseExperience
+        self.weight = weight
+        self.height = height
+        self.sprite = sprite
+    }
+    
+}
+
+extension PokemonDetail {
+    static func fromDTO(dto: PokemonDetailDTO) -> PokemonDetail {
+        PokemonDetail(
+            id : dto.id,
+            name : dto.name,
+            baseExperience : dto.baseExperience,
+            weight : dto.weight,
+            height : dto.height,
+            sprite : Sprite(front: dto.sprites.frontDefault, back: dto.sprites.backDefault),
+        )
     }
 }
 

@@ -1,7 +1,8 @@
 import Foundation
 
 protocol PokedexRepositoryProtocol: Sendable {
-    func fetchPokemons(limit: Int, offset: Int) async throws -> PokemonResponse
+    func fetchPokemons(limit: Int, offset: Int) async throws -> PaginatedResponse<Pokemon>
+    
     
     func fetchPokemon(id: Int) async throws -> PokemonDetail
 }
@@ -9,10 +10,10 @@ protocol PokedexRepositoryProtocol: Sendable {
 struct PokedexRepository: PokedexRepositoryProtocol {
     let network: any NetworkService
     
-    func fetchPokemons(limit: Int, offset: Int) async throws -> PokemonResponse {
+    func fetchPokemons(limit: Int, offset: Int) async throws -> PaginatedResponse<Pokemon> {
         let page = try await network.request(
             endpoint: PokeAPIEndpoint.pokemonList(limit: limit, offset: offset),
-            responseType: PaginatedResponseDTO.self
+            responseType: PaginatedResponseDTO<ItemDTO>.self
         )
         
         let pokemons = try page.results.map { entry in
@@ -22,7 +23,7 @@ struct PokedexRepository: PokedexRepositoryProtocol {
             return Pokemon(id: id, name: entry.name.capitalized)
         }
         
-        return PokemonResponse(
+        return PaginatedResponse<Pokemon>(
             items: pokemons,
             hasNextPage: page.next != nil,
         )
@@ -37,7 +38,7 @@ struct PokedexRepository: PokedexRepositoryProtocol {
             responseType: PokemonDetailDTO.self
         )
         
-        return PokemonDetail(dto: dto)
+        return PokemonDetail.fromDTO(dto: dto)
     }
 }
 

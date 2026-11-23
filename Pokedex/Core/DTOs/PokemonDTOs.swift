@@ -7,8 +7,8 @@ import Foundation
 }
 
 
-nonisolated struct PaginatedResponseDTO: Decodable, Sendable {
-    let results: [ItemDTO]
+nonisolated struct PaginatedResponseDTO<T: Decodable & Sendable>: Decodable, Sendable {
+    let results: [T]
     
     let next: URL?
 }

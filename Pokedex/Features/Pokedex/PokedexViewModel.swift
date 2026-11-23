@@ -19,7 +19,7 @@ final class PokedexViewModel {
     private(set) var hasNextPage = true
     private(set) var nextPageFailed = false
 
-    private let pageSize = 20
+    private let pageSize = 21
     private var offset = 0
     
     init(repository: any PokedexRepositoryProtocol) {
@@ -43,10 +43,10 @@ final class PokedexViewModel {
 
             try Task.checkCancellation()
             
-            
             offset = result.items.count
             hasNextPage = result.hasNextPage && !result.items.isEmpty
             nextPageFailed = false
+            
             state = .loaded(result.items)
         } catch {
             if Task.isCancelled || error is CancellationError {

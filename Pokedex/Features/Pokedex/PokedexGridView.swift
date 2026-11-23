@@ -3,6 +3,9 @@ import SwiftUI
 struct PokedexGridView: View {
     let viewModel: PokedexViewModel
     let onSelect: (Pokemon) -> Void
+    
+    
+    @Environment(\.viewModels) private var viewModels
 
     private let columns = Array(
         repeating: GridItem(.flexible(), spacing: 12),
@@ -15,32 +18,11 @@ struct PokedexGridView: View {
                 LazyVStack(spacing: 16) {
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(pokemon) { entry in
-                            Button {
-                                onSelect(entry)
-                            } label: {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text("#\(entry.id)")
-                                        .font(.caption.monospacedDigit())
-                                        .foregroundStyle(.secondary)
-
-                                    Text(entry.name)
-                                        .font(.headline)
-                                        .foregroundStyle(.primary)
-                                }
-                                .frame(
-                                    maxWidth: .infinity,
-                                    alignment: .leading
-                                )
-                                .padding(16)
-                                .background(
-                                    Color.secondary.opacity(0.12),
-                                    in: RoundedRectangle(cornerRadius: 14)
-                                )
-                                .contentShape(
-                                    RoundedRectangle(cornerRadius: 14)
-                                )
-                            }
-                            .buttonStyle(.plain)
+                            PokemonCard(
+                                pokemon: entry,
+                                viewModel: viewModels.pokemonDetail(),
+                                onSelect: onSelect,
+                            )
                         }
                     }
                     
