@@ -69,3 +69,16 @@ struct URLSessionNetworkService: NetworkService {
         return try decoder.decode(responseType, from: data)
     }
 }
+
+extension NetworkError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "Некорректный адрес запроса."
+        case .invalidResponse:
+            return "Не удалось прочитать ответ сервера."
+        case .httpStatus(let code):
+            return "Сервер вернул ошибку \(code)."
+        }
+    }
+}

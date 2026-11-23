@@ -31,6 +31,7 @@ final class PokemonDetail: Identifiable {
     var height: Int
     
     var sprite: Sprite
+    var types: [PokemonType]
     
     init(
         id: Int,
@@ -38,7 +39,8 @@ final class PokemonDetail: Identifiable {
         baseExperience: Int?,
         weight: Int,
         height: Int,
-        sprite: Sprite
+        sprite: Sprite,
+        types: [PokemonType]
     ) {
         self.id = id
         self.name = name
@@ -46,6 +48,7 @@ final class PokemonDetail: Identifiable {
         self.weight = weight
         self.height = height
         self.sprite = sprite
+        self.types = types
     }
     
 }
@@ -59,6 +62,9 @@ extension PokemonDetail {
             weight : dto.weight,
             height : dto.height,
             sprite : Sprite(front: dto.sprites.frontDefault, back: dto.sprites.backDefault),
+            types:  dto.types.map{item in
+                return PokemonType(slot: item.slot, name: item.type.name)
+            }
         )
     }
 }
@@ -72,5 +78,16 @@ final class Sprite {
     init(front: String, back: String?) {
         self.front = front
         self.back = back
+    }
+}
+
+@Model
+final class PokemonType {
+    var slot: Int
+    var name: String
+    
+    init(slot: Int, name: String) {
+        self.slot = slot
+        self.name = name
     }
 }

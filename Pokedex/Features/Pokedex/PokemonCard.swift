@@ -5,6 +5,9 @@ struct PokemonCard: View {
     let onSelect: (Pokemon) -> Void
     
     @State private var viewModel: PokemonDetailViewModel
+    @State private var color: Color?
+    @State private var isLightBg: Bool = false
+    @Environment(\.imageColorAnalyzer) private var imageColorAnalyzer
     
     
     init(
@@ -38,28 +41,41 @@ struct PokemonCard: View {
                 case .loading:
                     ProgressView("Загрузка…")
                     
-                case .failed:
-                    Text("Failed")
+                case .failed(let error):
+                    Text(error)
                         .font(Font.title3)
                 case .loaded(let pokemonDetail):
+               
                     ZStack(alignment: .center){
                         SpriteImage(
-                            url: URL(string: pokemonDetail.sprite.front)
-                        )
+                            url: pokemonDetail.sprite.front,
+                           
+                        ) {
+                            uiImage in
+                            guard let bgColor = await imageColorAnalyzer.dominantColor(for: pokemon.id, image: uiImage)
+                            else { return }
+                            
+                            isLightBg = bgColor.isLight
+                            color = bgColor
+                        }
+                        .frame(height: 120)
                         
                         VStack() {
                             Text("#\(pokemonDetail.id)")
-                                .font(.caption.monospacedDigit())
+                                .font(Font.pixel16)
+//                                .font(.system(size: 16, weight: .bold))
                                 .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             Spacer()
                             Text(pokemonDetail.name)
-                                .font(.system(size: 14))
+                                .font(Font.pixel12)
+//                                .font(.system(size: 14))
+                                .foregroundStyle(isLightBg ? Color.darkGrey : .white)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .foregroundStyle(.primary)
                         }
-                        .padding(16)
-                        
-                        
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                     }
                     
                 }
@@ -67,15 +83,14 @@ struct PokemonCard: View {
         .buttonStyle(.plain)
         .frame(
             maxWidth: .infinity,
-            minHeight: 100,
             maxHeight: .infinity,
         )
         .background(
-            Color.secondary.opacity(0.12),
-            in: RoundedRectangle(cornerRadius: 14)
+            color ?? Color.gray.opacity(0.12),
+            in: RoundedRectangle(cornerRadius: 12)
         )
         .contentShape(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 12)
         )
     }
 }

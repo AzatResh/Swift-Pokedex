@@ -8,15 +8,15 @@ final class PokemonDetailViewModel {
         case idle
         case loading
         case loaded(PokemonDetail)
-        case failed
+        case failed(String)
     }
     
     
     private(set) var state: State = .idle
-    private let repository: any PokedexRepositoryProtocol
+    private let repository: any PokemonRepositoryProtocol
     
     
-    init(repository: any PokedexRepositoryProtocol) {
+    init(repository: any PokemonRepositoryProtocol) {
         self.repository = repository
     }
     
@@ -33,7 +33,7 @@ final class PokemonDetailViewModel {
             let detail = try await repository.fetchPokemon(id: id)
             
             
-            print("there ------- \(detail.name)")
+            print("there ------- \(detail.name) \(String(reflecting: detail.types.first?.name))")
             try Task.checkCancellation()
             state = .loaded(detail)
         
@@ -41,7 +41,7 @@ final class PokemonDetailViewModel {
             if Task.isCancelled || error is CancellationError {
                 state = .idle
             } else {
-                state = .failed
+                state = .failed(String(reflecting: error))
             }
         }
     }

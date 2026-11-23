@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct PokemonDetailView: View {
+    
     let pokemonId: Int
+    
     @State private var viewModel: PokemonDetailViewModel
+    @State private var color: Color?
+    @Environment(\.imageColorAnalyzer) private var imageColorAnalyzer
     
     init(pokemonId: Int, viewModel: PokemonDetailViewModel) {
         self.pokemonId = pokemonId
@@ -15,6 +19,7 @@ struct PokemonDetailView: View {
             .task {
                 await viewModel.load(id: pokemonId)
             }
+            .background(Color.cardBackground)
     }
           
     @ViewBuilder
@@ -29,8 +34,17 @@ struct PokemonDetailView: View {
                 VStack() {
                     
                     SpriteImage(
-                        url: URL(string: pokemon.sprite.front),
-                        minHeight: 120
+                        url: pokemon.sprite.front,
+                    ) {
+                        uiImage in
+                        guard let bgColor = await  imageColorAnalyzer.dominantColor(for: pokemonId, image: uiImage)
+                                else {return}
+                        
+                        color = bgColor
+                    }
+                    .frame(
+                        minHeight: 120,
+                        maxHeight: 500
                     )
                     Text(pokemon.name)
                     HStack() {
@@ -40,6 +54,7 @@ struct PokemonDetailView: View {
                     
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .background(color.ignoresSafeArea())
             
             case .failed:
                 VStack(spacing: 12) {

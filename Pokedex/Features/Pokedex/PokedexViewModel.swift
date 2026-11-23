@@ -8,11 +8,11 @@ final class PokedexViewModel {
         case idle
         case loading
         case loaded([Pokemon])
-        case failed
+        case failed(String)
     }
     
     private(set) var state: State = .idle
-    private let repository: any PokedexRepositoryProtocol
+    private let repository: any PokemonRepositoryProtocol
     
     
     private(set) var isLoadingNextPage = false
@@ -22,7 +22,7 @@ final class PokedexViewModel {
     private let pageSize = 21
     private var offset = 0
     
-    init(repository: any PokedexRepositoryProtocol) {
+    init(repository: any PokemonRepositoryProtocol) {
         self.repository = repository
     }
     
@@ -52,7 +52,7 @@ final class PokedexViewModel {
             if Task.isCancelled || error is CancellationError {
                 state = .idle
             } else {
-                state = .failed
+                state = .failed(String(reflecting: error))
             }
         }
     }

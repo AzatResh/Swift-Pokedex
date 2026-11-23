@@ -1,13 +1,13 @@
 import Foundation
 
-protocol PokedexRepositoryProtocol: Sendable {
+protocol PokemonRepositoryProtocol: Sendable {
     func fetchPokemons(limit: Int, offset: Int) async throws -> PaginatedResponse<Pokemon>
     
     
     func fetchPokemon(id: Int) async throws -> PokemonDetail
 }
 
-struct PokedexRepository: PokedexRepositoryProtocol {
+struct PokemonRepository: PokemonRepositoryProtocol {
     let network: any NetworkService
     
     func fetchPokemons(limit: Int, offset: Int) async throws -> PaginatedResponse<Pokemon> {
@@ -28,8 +28,6 @@ struct PokedexRepository: PokedexRepositoryProtocol {
             hasNextPage: page.next != nil,
         )
     }
-    
-    
     
     
     func fetchPokemon(id: Int) async throws  -> PokemonDetail {

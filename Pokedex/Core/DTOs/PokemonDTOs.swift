@@ -20,6 +20,11 @@ struct PokemonDetailDTO: Decodable, Sendable {
         let backDefault: String
     }
     
+    struct PokemonType: Decodable {
+        let slot: Int
+        let type: ItemDTO
+    }
+    
     let id: Int
     let name: String
     let baseExperience: Int?
@@ -27,4 +32,6 @@ struct PokemonDetailDTO: Decodable, Sendable {
     let height: Int
     
     let sprites: Sprites
+    let types: [PokemonType]
 }
+

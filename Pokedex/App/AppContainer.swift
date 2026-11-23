@@ -2,7 +2,9 @@ final class AppContainer: Sendable {
 //    let dependencies: AppDependencies
     
     let network: any NetworkService
-    let pokedexRepository: any PokedexRepositoryProtocol
+    let pokedexRepository: any PokemonRepositoryProtocol
+    let imageColorAnalyzer: ImageColorAnalyzing
+    let spriteLoader: SpriteLoader
 
     convenience init() {
         self.init(network: URLSessionNetworkService())
@@ -10,7 +12,9 @@ final class AppContainer: Sendable {
 
     init(network: any NetworkService) {
         self.network = network
-        self.pokedexRepository = PokedexRepository(network: network)
+        self.pokedexRepository = PokemonRepository(network: network)
+        self.imageColorAnalyzer = ImageColorAnalyzer()
+        self.spriteLoader = SpriteLoader()
     }
     
     
