@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PokedexGridView: View {
+    let namespace: Namespace.ID
     let viewModel: PokedexViewModel
     let onSelect: (Pokemon) -> Void
     let onRetry: () -> Void
@@ -31,9 +32,11 @@ struct PokedexGridView: View {
         case .failed(let error):
             VStack(spacing: 12) {
                 Text("Не удалось загрузить каталог \(error)")
+                    .multilineTextAlignment(.center)
                 Button("Повторить", action: onRetry)
             }
-            .padding()
+            .padding(.horizontal, 16)
+            
         }
     }
     
@@ -48,6 +51,10 @@ struct PokedexGridView: View {
                                 pokemon: entry,
                                 viewModel: viewModels.pokemonDetail(),
                                 onSelect: onSelect,
+                            )
+                            .matchedTransitionSource(
+                                id: entry.id,
+                                in: namespace
                             )
                         }
                     }

@@ -1,21 +1,24 @@
 import SwiftUI
 
 struct PokedexView: View {
+
     @State private var viewModel: PokedexViewModel
-
-   init(viewModel: PokedexViewModel) {
-       _viewModel = State(initialValue: viewModel)
-   }
-
-    @Environment(\.viewModels) private var viewModels
     @State private var coordinator = PokedexCoordinator()
     @State private var loadAttempt = 0
+    
+    @Namespace private var namespace
+    
+    @Environment(\.viewModels) private var viewModels
+    
+    init(viewModel: PokedexViewModel) {
+        _viewModel = State(initialValue: viewModel)
+    }
+
 
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             content
-                .background(Color.cardBackground)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .applyScreenStyle()
 //                .navigationTitle("Pokédex")
                 .toolbar {
                     ToolbarItem(placement: .principal) {
@@ -29,10 +32,15 @@ struct PokedexView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: PokedexRoute.self) { route in
                     switch route {
-                    case .pokemonDetail(let pokemonId):
+                    case .pokemonDetail(let pokemon):
                             PokemonDetailView(
-                                pokemonId: pokemonId,
+                                pokemon: pokemon,
                                 viewModel: viewModels.pokemonDetail()
+                            ).navigationTransition(
+                                .zoom(
+                                    sourceID: pokemon.id,
+                                    in: namespace
+                                )
                             )
                     }
                 }
@@ -45,9 +53,10 @@ struct PokedexView: View {
     @ViewBuilder
     private var content: some View {
         PokedexGridView(
+            namespace: namespace,
             viewModel: viewModel,
             onSelect: { pokemon in
-                coordinator.showPokemonDetail(id: pokemon.id)
+                coordinator.showPokemonDetail(pokemon: pokemon)
             },
             onRetry: {
                 loadAttempt += 1

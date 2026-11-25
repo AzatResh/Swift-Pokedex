@@ -1,5 +1,5 @@
 import SwiftData
-
+import Foundation
 
 struct PaginatedResponse<T> {
     let items: [T]
@@ -19,6 +19,19 @@ final class Pokemon: Identifiable {
     init(id: Int, name: String) {
         self.id = id
         self.name = name
+    }
+}
+
+extension Pokemon {
+    static func fromDTO(_ dto: ItemDTO) -> Pokemon? {
+        guard let id = Int(dto.url.lastPathComponent) else {
+            return nil
+        }
+        
+        return Pokemon(
+            id: id,
+            name: dto.name.capitalized
+        )
     }
 }
 

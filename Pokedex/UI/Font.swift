@@ -5,7 +5,8 @@ import SwiftUI
 /// so small labels grow more gently than titles.
 extension Font {
     private static let pixelmix = "pixelmix Regular"
-
+    
+    static let pixel22 = Font.custom(pixelmix, size: 22.0, relativeTo: .title3).weight(.bold)
     static let pixel18 = Font.custom(pixelmix, size: 18.0, relativeTo: .title3)
     static let pixel16 = Font.custom(pixelmix, size: 16.0, relativeTo: .headline)
     static let pixel14 = Font.custom(pixelmix, size: 14.0, relativeTo: .body)

@@ -1,7 +1,8 @@
 import Observation
+import SwiftUI
 
 enum PokedexRoute: Hashable {
-    case pokemonDetail(id: Int)
+    case pokemonDetail(pokemon: Pokemon)
 }
 
 
@@ -9,11 +10,18 @@ enum PokedexRoute: Hashable {
 final class PokedexCoordinator {
     var path: [PokedexRoute] = []
 
-    func showPokemonDetail(id: Int) {
-        path.append(.pokemonDetail(id: id))
+    func showPokemonDetail(pokemon: Pokemon) {
+        path.append(.pokemonDetail(pokemon: pokemon))
     }
 
     func popToRoot() {
         path.removeAll()
+    }
+    
+    func transition(
+        in namespace: Namespace.ID,
+        pokemonID: Int
+    ) -> some NavigationTransition {
+        .zoom(sourceID: pokemonID, in: namespace)
     }
 }

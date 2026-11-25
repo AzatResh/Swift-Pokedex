@@ -33,7 +33,7 @@ final class PokemonDetailViewModel {
             let detail = try await repository.fetchPokemon(id: id)
             
             
-            print("there ------- \(detail.name) \(String(reflecting: detail.types.first?.name))")
+            print("there ------- \(detail.id) \(detail.name) \(String(reflecting: detail.types.first?.name))")
             try Task.checkCancellation()
             state = .loaded(detail)
         

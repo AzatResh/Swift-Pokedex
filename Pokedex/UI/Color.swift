@@ -1,7 +1,8 @@
 import SwiftUI
 
 extension Color {
-    
+    static let brandRed = Color("BrandRed")
+
     static let darkGrey = Color(hex: 0x181818)
     static let pokedexRed = Color(hex: 0xD53B47)
     static let cardBackground = Color(hex: 0x202020)
@@ -39,6 +40,19 @@ extension Color {
             return brightness > 0.6
         }
         return false
+    }
+    
+    
+    /// Returns the color with its HSB hue and brightness shifted, both wrapping/clamping to [0, 1].
+    func shifted(hue dh: CGFloat, brightness db: CGFloat = 0) -> Color {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        guard UIColor(self).getHue(&h, saturation: &s, brightness: &b, alpha: &a) else {
+            return self
+        }
+        return Color(hue: (h + dh).truncatingRemainder(dividingBy: 1),
+                     saturation: s,
+                     brightness: min(max(b + db, 0), 1),
+                     opacity: a)
     }
 }
 

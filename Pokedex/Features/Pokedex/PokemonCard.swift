@@ -64,15 +64,14 @@ struct PokemonCard: View {
                             Text("#\(pokemonDetail.id)")
                                 .font(Font.pixel16)
 //                                .font(.system(size: 16, weight: .bold))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(isLightBg ? Color.darkGrey : Color.white)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             Spacer()
                             Text(pokemonDetail.name)
                                 .font(Font.pixel12)
 //                                .font(.system(size: 14))
-                                .foregroundStyle(isLightBg ? Color.darkGrey : .white)
+                                .foregroundStyle(isLightBg ? Color.darkGrey : Color.white)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .foregroundStyle(.primary)
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
@@ -83,6 +82,7 @@ struct PokemonCard: View {
         .buttonStyle(.plain)
         .frame(
             maxWidth: .infinity,
+            minHeight: 120,
             maxHeight: .infinity,
         )
         .background(

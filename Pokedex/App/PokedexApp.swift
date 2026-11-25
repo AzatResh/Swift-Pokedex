@@ -15,6 +15,11 @@ struct PokedexApp: App {
         WindowGroup {
             RootView()
                 .environment(\.container, container)
+                .preferredColorScheme(.dark)
+                .background {
+                    Color.red
+                        .ignoresSafeArea()
+                }
         }
     }
 }

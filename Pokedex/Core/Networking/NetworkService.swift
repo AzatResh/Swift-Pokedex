@@ -1,7 +1,7 @@
 import Foundation
 
 protocol APIEndpoint: Sendable {
-    var baseURL: String { get }
+//    var baseURL: String { get }
     var path: String { get }
     var method: String { get }
     var queryItems: [URLQueryItem] { get }
@@ -25,9 +25,12 @@ enum NetworkError: Error {
 }
 
 struct URLSessionNetworkService: NetworkService {
+    
+    private let baseUrl: String
     private let session: URLSession
 
-    init(session: URLSession = .shared) {
+    init(baseUrl: String, session: URLSession = .shared) {
+        self.baseUrl = baseUrl
         self.session = session
     }
 
@@ -35,7 +38,7 @@ struct URLSessionNetworkService: NetworkService {
         endpoint: any APIEndpoint,
         responseType: T.Type
     ) async throws -> T {
-        guard let baseURL = URL(string: endpoint.baseURL),
+        guard let baseURL = URL(string: baseUrl),
               var components = URLComponents(
                 url: baseURL.appendingPathComponent(endpoint.path),
                 resolvingAgainstBaseURL: false
@@ -78,7 +81,7 @@ extension NetworkError: LocalizedError {
         case .invalidResponse:
             return "Не удалось прочитать ответ сервера."
         case .httpStatus(let code):
-            return "Сервер вернул ошибку \(code)."
+            return "Error: \(code)."
         }
     }
 }

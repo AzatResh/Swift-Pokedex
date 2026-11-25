@@ -1,11 +1,9 @@
 import Foundation
 
-
  struct ItemDTO: Decodable, Sendable {
      let name: String
      let url: URL
 }
-
 
 nonisolated struct PaginatedResponseDTO<T: Decodable & Sendable>: Decodable, Sendable {
     let results: [T]

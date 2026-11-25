@@ -5,6 +5,8 @@ protocol PokemonRepositoryProtocol: Sendable {
     
     
     func fetchPokemon(id: Int) async throws -> PokemonDetail
+    
+    func fetchPokemonSpecies(id: Int) async throws -> PokemonSpecies
 }
 
 struct PokemonRepository: PokemonRepositoryProtocol {
@@ -16,12 +18,7 @@ struct PokemonRepository: PokemonRepositoryProtocol {
             responseType: PaginatedResponseDTO<ItemDTO>.self
         )
         
-        let pokemons = try page.results.map { entry in
-            guard let id = Int(entry.url.lastPathComponent) else {
-                throw PokemonMappingError.invalidID(entry.url.absoluteString)
-            }
-            return Pokemon(id: id, name: entry.name.capitalized)
-        }
+        let pokemons = page.results.compactMap(Pokemon.fromDTO)
         
         return PaginatedResponse<Pokemon>(
             items: pokemons,
@@ -38,8 +35,12 @@ struct PokemonRepository: PokemonRepositoryProtocol {
         
         return PokemonDetail.fromDTO(dto: dto)
     }
-}
-
-private enum PokemonMappingError: Error {
-  case invalidID(String)
+    func fetchPokemonSpecies(id: Int) async throws  -> PokemonSpecies {
+        let dto = try await network.request(
+            endpoint: PokeAPIEndpoint.pokemonSpecies(id: id),
+            responseType: PokemonSpeciesDTO.self
+        )
+         
+        return PokemonSpecies.fromDTO(dto: dto)
+    }
 }
