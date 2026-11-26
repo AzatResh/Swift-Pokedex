@@ -13,6 +13,8 @@ struct PaginatedResponse<T> {
 
 @Model // @Model может сохранять локально
 final class Pokemon: Identifiable {
+    
+    @Attribute(.unique)
     var id: Int
     var name: String
     

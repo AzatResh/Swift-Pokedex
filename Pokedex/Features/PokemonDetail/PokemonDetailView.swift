@@ -31,6 +31,9 @@ struct PokemonDetailView: View {
                         .font(Font.pixel22)
                         .foregroundStyle(textColor)
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    FavoriteButton(pokemon: pokemon)
+                }
             }
     }
           

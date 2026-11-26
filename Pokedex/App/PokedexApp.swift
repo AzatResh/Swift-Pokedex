@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct PokedexApp: App {
@@ -21,6 +22,8 @@ struct PokedexApp: App {
                         .ignoresSafeArea()
                 }
         }
+        .modelContainer(for: Pokemon.self)
+       
     }
 }
 

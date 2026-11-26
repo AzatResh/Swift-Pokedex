@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ItemsViiew: View {
+struct ItemsView: View {
     
     @State private var viewModel: ItemsViewModel
     
@@ -12,11 +12,26 @@ struct ItemsViiew: View {
     
     
     var body: some View {
-        content
-            .task {
-                await viewModel.load()
-            }
-            .applyScreenStyle()
+        
+        NavigationStack {
+            content
+            
+                .applyScreenStyle()
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Items")
+                            .font(.pixel22)
+                            .foregroundStyle(Color.white)
+                    }
+                }
+                .toolbarBackground(Color.red, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .navigationBarTitleDisplayMode(.inline)
+        }
+        .task {
+            await viewModel.load()
+        }
+        
     }
     
     @ViewBuilder

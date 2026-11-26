@@ -34,7 +34,7 @@ struct RootTabView: View {
                 systemImage: "xmark.triangle.circle.square.fill",
                 value: Tabs.items,
                 content: {
-                    ItemsViiew(viewModel: viewModels.itemsView())
+                    ItemsView(viewModel: viewModels.itemsView())
                 }
             )
             

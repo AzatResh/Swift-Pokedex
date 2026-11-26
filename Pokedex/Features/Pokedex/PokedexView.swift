@@ -23,7 +23,7 @@ struct PokedexView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text("Pokédex")
-                            .font(.system(size: 22, weight: .bold))
+                            .font(.pixel22)
                             .foregroundStyle(Color.white)
                     }
                 }
