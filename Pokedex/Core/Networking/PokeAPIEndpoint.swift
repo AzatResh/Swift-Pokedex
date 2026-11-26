@@ -41,3 +41,39 @@ enum PokeAPIEndpoint: APIEndpoint {
         }
     }
 }
+
+
+enum ItemAPIEndpoint: APIEndpoint {
+    case itemList(limit: Int, offset: Int)
+    case itemDetail(id: Int)
+
+
+    
+    var method: String {
+        switch self {
+        case .itemList, .itemDetail:
+            return "GET"
+        }
+    }
+
+    var path: String {
+        switch self {
+        case .itemList:
+            return "item"
+        case .itemDetail(let id):
+            return "item/\(id)"
+        }
+    }
+
+    var queryItems: [URLQueryItem] {
+        switch self {
+        case .itemList(let limit, let offset):
+            return [
+                URLQueryItem(name: "limit", value: String(limit)),
+                URLQueryItem(name: "offset", value: String(offset)),
+            ]
+        case .itemDetail:
+            return []
+        }
+    }
+}

@@ -29,8 +29,8 @@ private struct RootView: View {
     @Environment(\.viewModels) private var viewModels
 
     var body: some View {
+        RootTabView()
         
-        PokedexView(viewModel: viewModels.pokedex())
-//        RootTabView(viewModel: viewModels.pokedex(), multiplayerSetup: viewModels.multiplayerSetup())
+//        PokedexView(viewModel: viewModels.pokedex())
     }
 }

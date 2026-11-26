@@ -18,4 +18,12 @@ extension ViewModelFactory {
     func pokemonSpecies() -> PokemonSpeciesViewModel {
         PokemonSpeciesViewModel(repository: container.pokedexRepository)
     }
+    
+    func itemsView() -> ItemsViewModel {
+        ItemsViewModel(repository: container.itemRepository)
+    }
+    
+    func itemDetail() -> ItemDetailViewModel {
+        ItemDetailViewModel(repository: container.itemRepository)
+    }
 }

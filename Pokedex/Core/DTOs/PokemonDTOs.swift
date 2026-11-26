@@ -23,6 +23,10 @@ struct PokemonDetailDTO: Decodable, Sendable {
         let type: ItemDTO
     }
     
+    struct Move: Decodable {
+        let move: ItemDTO
+    }
+    
     let id: Int
     let name: String
     let baseExperience: Int?
@@ -31,5 +35,6 @@ struct PokemonDetailDTO: Decodable, Sendable {
     
     let sprites: Sprites
     let types: [PokemonType]
+    let moves: [Move]
 }
 

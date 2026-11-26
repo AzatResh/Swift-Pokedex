@@ -76,15 +76,9 @@ final class PokedexViewModel {
 
                 try Task.checkCancellation()
 
-                // Исключаем повторяющиеся ID, если страницы пересекаются.
-                var existingIDs = Set(currentPokemon.map(\.id))
-                let newPokemon = page.items.filter {
-                    existingIDs.insert($0.id).inserted
-                }
-
                 offset += page.items.count
                 hasNextPage = page.hasNextPage && !page.items.isEmpty
-                state = .loaded(currentPokemon + newPokemon)
+                state = .loaded(currentPokemon + page.items)
             } catch {
                 if Task.isCancelled || error is CancellationError {
                     return

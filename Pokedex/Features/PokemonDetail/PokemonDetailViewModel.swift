@@ -22,9 +22,11 @@ final class PokemonDetailViewModel {
     
     
     func load(id: Int) async {
+        
         switch state {
             case .idle, .failed:
                 state = .loading
+            
             case .loading, .loaded:
                 return
         }

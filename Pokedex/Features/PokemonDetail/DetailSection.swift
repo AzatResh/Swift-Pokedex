@@ -26,6 +26,7 @@ struct DetailSection<Content: View>: View {
                 VStack (alignment: .leading, spacing: 12) {
                     content()
                 }
+                .frame(maxWidth: .infinity)
             }
         }
     }

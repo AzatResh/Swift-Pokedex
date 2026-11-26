@@ -3,7 +3,6 @@ import Foundation
 protocol PokemonRepositoryProtocol: Sendable {
     func fetchPokemons(limit: Int, offset: Int) async throws -> PaginatedResponse<Pokemon>
     
-    
     func fetchPokemon(id: Int) async throws -> PokemonDetail
     
     func fetchPokemonSpecies(id: Int) async throws -> PokemonSpecies

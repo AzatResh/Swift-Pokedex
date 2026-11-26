@@ -32,7 +32,6 @@ final class PokemonSpeciesViewModel {
         do {
             let result = try await repository.fetchPokemonSpecies(id: id)
             
-            
             try Task.checkCancellation()
             state = .loaded(result)
         

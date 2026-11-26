@@ -2,6 +2,8 @@ final class AppContainer: Sendable {
     
     let network: any NetworkService
     let pokedexRepository: any PokemonRepositoryProtocol
+    let itemRepository: any ItemRepositoryProtocol
+    
     let imageColorAnalyzer: ImageColorAnalyzing
     let spriteLoader: SpriteLoader
 
@@ -13,6 +15,7 @@ final class AppContainer: Sendable {
         
         self.network = pokedexNetwork
         self.pokedexRepository = PokemonRepository(network: pokedexNetwork)
+        self.itemRepository = ItemRepository(network: pokedexNetwork)
         
         self.imageColorAnalyzer = ImageColorAnalyzer()
         self.spriteLoader = SpriteLoader()

@@ -23,14 +23,14 @@ final class Pokemon: Identifiable {
 }
 
 extension Pokemon {
-    static func fromDTO(_ dto: ItemDTO) -> Pokemon? {
+    static func fromDTO(dto: ItemDTO) -> Pokemon? {
         guard let id = Int(dto.url.lastPathComponent) else {
             return nil
         }
         
         return Pokemon(
             id: id,
-            name: dto.name.capitalized
+            name: dto.name.replacingOccurrences(of: "é", with: "E").capitalized
         )
     }
 }
@@ -45,6 +45,7 @@ final class PokemonDetail: Identifiable {
     
     var sprite: Sprite
     var types: [PokemonType]
+    var moves: [String]
     
     init(
         id: Int,
@@ -53,7 +54,8 @@ final class PokemonDetail: Identifiable {
         weight: Int,
         height: Int,
         sprite: Sprite,
-        types: [PokemonType]
+        types: [PokemonType],
+        moves: [String],
     ) {
         self.id = id
         self.name = name
@@ -62,6 +64,7 @@ final class PokemonDetail: Identifiable {
         self.height = height
         self.sprite = sprite
         self.types = types
+        self.moves = moves
     }
     
 }
@@ -77,7 +80,8 @@ extension PokemonDetail {
             sprite : Sprite(front: dto.sprites.frontDefault, back: dto.sprites.backDefault),
             types:  dto.types.map{item in
                 return PokemonType(slot: item.slot, name: item.type.name)
-            }
+            },
+            moves: dto.moves.map{entry in entry.move.name.capitalized}
         )
     }
 }

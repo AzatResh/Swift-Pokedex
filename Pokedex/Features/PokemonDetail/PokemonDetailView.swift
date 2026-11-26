@@ -69,7 +69,21 @@ struct PokemonDetailView: View {
                             viewModel: viewModels.pokemonSpecies(),
                         )
                         
-                        Color.clear.frame(height: 500)
+                        
+                        DetailSection(
+                            title:  "Moves",
+                            textColor: textColor
+                        ){
+                            Text(pokemonDetail.moves.joined(separator: ", "))
+                                .font(.pixel14)
+                                .foregroundStyle(textColor)
+                                .lineSpacing(4)
+                                .lineLimit(5)
+                                .truncationMode(.tail)
+                                .padding(16)
+                        }
+                        
+                        Color.clear.frame(height: 1000)
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -145,8 +159,9 @@ struct PokemonInfo: View {
             ){
                 Text(species.flavorText)
                     .font(.pixel14)
+                    .lineSpacing(4)
                     .foregroundStyle(textColor)
-                    .padding(.vertical, 16)
+                    .padding(16)
             }
         case .failed(let error):
             Text(error)

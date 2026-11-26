@@ -23,8 +23,10 @@ extension PokemonSpecies {
         PokemonSpecies(
             id: dto.id,
             flavorText: dto.flavorTextEntries.first?.flavorText
-                .replacingOccurrences(of: "\n", with: "") ?? "" ,
-            genus: dto.genera.first(where: { $0.language.name == "en"})?.genus ?? "",
+                .replacingOccurrences(of: "\n", with: "")
+                .replacingOccurrences(of: "é", with: "E") ?? "" ,
+            genus: dto.genera.first(where: { $0.language.name == "en"})?.genus
+                .replacingOccurrences(of: "é", with: "e") ?? "",
             evolutionChainId: Int(dto.evolutionChain.url.lastPathComponent)
         )
     }
